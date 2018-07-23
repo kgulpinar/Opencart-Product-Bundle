@@ -1,0 +1,247 @@
+<div class="container-fluid createBundleForm">
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-7 col-lg-8">
+            {% if bundle.id == '0' %} 
+                <h3 class="step">{{ text_create_bundle }}</h3>
+            {% else %}   
+                <h3 class="step">{{ text_edit_bundle }}</h3>
+            {% endif %} 
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-5 col-lg-4">
+            <div class="pull-right">
+                <a onClick="saveBundle(this);" class="btn btn-primary">{{ text_btn_save_bundle }}</a>&nbsp;&nbsp;<a onClick="cancelBundle(this);" class="btn btn-danger">{{ text_btn_cancel }}</a>
+            </div>
+        </div>
+    </div>        
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+            <h5><strong>{{ text_bundle_status }}:</strong></h5>
+        </div>    
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select name="bundle[status]" class="form-control">
+                <option value="1" {{ bundle.status == '1' ? 'seleccted="selected"' : '' }}>{{ text_enabled }}</option>
+                <option value="0" {{ bundle.status == '0' ? 'seleccted="selected"' : '' }}>{{ text_disabled }}</option>
+            </select>
+        </div>
+    </div>
+    <br><hr><br />
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="step">{{ text_bundles_step_1 }}</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_bundle_name }}:</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_bundle_name_helper }}</span>
+            <input type="hidden" name="bundle[id]" value="{{ bundle.id }}" />    
+        </div>    
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            {% for language in languages %} 
+                <div class="input-group">
+                  <span class="input-group-addon"><img src="{{ language.flag_url }}"/></span>
+                  <input type="text" class="form-control" name="bundle[name][{{ language.language_id }}]" value="{{ bundle.name[language.language_id] ? bundle.name[language.language_id] : '' }}" />
+                </div>
+                <br />
+            {% endfor %} 
+        </div>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_bundle_seo_keyword }}:</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_bundle_seo_keyword_helper }}</span>
+        </div>    
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <input type="text" class="form-control" name="bundle[slug]" value="{{ bundle.slug ? bundle.slug : '' }}" />
+        </div>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+            <h5><strong>{{ text_bundle_description }}</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_bundle_description_helper }}</span>
+        </div>    
+        <div class="col-xs-12 col-sm-6 col-md-5 col-lg-6">
+            <ul class="nav nav-tabs" id="langtabs-bundle" role="tablist">
+              {% for language in languages %} 
+                <li><a href="#lang-bundle-{{ language.language_id }}" role="tab" data-toggle="tab"><img src="{{ language.flag_url }}" title="{{ language.name }}"/> {{ language.name }}</a></li>
+              {% endfor %} 
+            </ul>
+            <div class="tab-content">
+              {% for language in languages %} 
+                <div class="tab-pane" id="lang-bundle-{{ language.language_id }}">
+                    <textarea class="form-control bundle-description" name="bundle[description][{{ language.language_id }}]">{{ bundle.description[language.language_id] ? bundle.description[language.language_id] : '' }}</textarea>
+                </div>
+              {% endfor %} 
+            </div>
+            {% for language in languages %} 
+                
+            {% endfor %} 
+        </div>
+    </div>
+    <hr><br />
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="step">{{ text_bundles_step_2 }}</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-3 col-lg-2">
+            <h5><strong>{{ text_bundled_products }}:</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_bundled_products_helper }}</span>
+        </div>    
+        <div class="col-xs-12 col-sm-7 col-md-9 col-lg-10">
+            <div class="row">
+                <div class="col-xs-12 col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-addon">{{ text_product_add_label }}</span>
+                        <input type="text" name="productInput" class="form-control" value="" placeholder="Start typing the product name" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">{{ text_quantity_label }}</span>
+                        <input type="text" name="quantityInput" class="form-control" value="1" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <a href="javascript:void(0)" onClick="addProductToBundle(this);" class="btn btn-primary addProductToBundle">Add Product</a>
+                </div>
+            </div>
+            <br />
+            <div class="row bundle-products-listbox">
+            {% if bundle.products|length > 0 %}
+                {% for bundle_product in bundle.products %} 
+                <div class="col-sm-6 col-md-3 col-lg-2">
+                    <input type="hidden" name="bundle[products][]" value="{{ bundle_product.product_id }}" />    
+                    <a onClick="removeProductFromBundle(this, '{{ bundle_product.price }}');" class="btn btn-xs btn-default removeProductFromBundle" role="button"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                    <div class="thumbnail">
+                        <img src="{{ bundle_product.image }}" alt="{{ bundle_product.name }}">
+                        <div class="caption text-center">
+                            <h3>{{ bundle_product.options ? '<i class="fa fa-tags" style="color:#ab9a87;font-size:13px;"></i>' : '' }}&nbsp;{{ bundle_product.name }}</h3>
+                            <p>{{ text_price }}: {{ bundle_product.price }}{{ config_currency }}</p>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                {% endfor %} 
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <br /><br />
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-3 col-lg-2">
+            <h5><strong>{{ text_bundle_show_on }}:</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_bundle_show_on_helper }}</span>
+        </div>    
+        <div class="col-xs-12 col-sm-7 col-md-9 col-lg-10">
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="form-group input-group">
+                       <span class="input-group-addon" style="border: 0; background-color: transparent;">{{ text_products }}</span>
+                       <input type="text" name="productShowInput" class="form-control" value="" />
+                    </div>
+                    <div class="bundle-products-show-listbox well well-sm">
+                    {% if bundle.products_show|length > 0 %}
+                        {% for bundle_product_show in bundle.products_show %} 
+                        <span class="label label-lg label-primary label-product-{{ bundle_product_show.product_id }}">{{ bundle_product_show.name }}<i class="fa fa-times-circle removeIcon text-right"></i><input type="hidden" name="bundle[products_show][]" value="{{ bundle_product_show.product_id }}" /></span>
+                        {% endfor %} 
+                    {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-md-6">
+                    <div class="form-group input-group">
+                       <span class="input-group-addon" style="border: 0; background-color: transparent;">{{ text_categories }}</span>
+                       <input type="text" name="categoryShowInput" class="form-control" value="" />
+                    </div>
+                    <div class="bundle-categories-show-listbox well well-sm">
+                    {% if bundle.categories_show|length > 0 %}
+                        {% for bundle_category_show in bundle.categories_show %} 
+                        <span class="label label-lg label-primary label-category-{{ bundle_category_show.category_id }}">{{ bundle_category_show.name }}<i class="fa fa-times-circle removeIcon text-right"></i><input type="hidden" name="bundle[categories_show][]" value="{{ bundle_category_show.category_id }}" /></span>
+                        {% endfor %} 
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr><br />
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="step">{{ text_bundles_step_3 }}</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-3 col-lg-2">
+            <h5><strong>{{ text_bundle_discount_options }}:</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_bundle_discount_options_helper }}</span>
+        </div>    
+        <div class="col-xs-12 col-sm-7 col-md-9 col-lg-10">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="input-group">
+                    <span class="input-group-addon">{{ text_discount_type }}</span>
+                    <select name="bundle[discount_type]" class="form-control discountType">
+                        <option value="1" {{ bundle.discount_type == '1' ? 'selected="selected"' : '' }}>{{ text_fixed_price }}</option>
+                        <option value="2" {{ bundle.discount_type == '2' ? 'selected="selected"' : '' }}>{{ text_percentage }}</option>
+                    </select>
+                </div>
+                <br /><br />
+                <div class="input-group">
+                    <span class="input-group-addon">{{ text_discount_value }}</span>
+                    <input type="text" class="form-control bundlePriceInput" name="bundle[discount_value]" value="{{ bundle.discount_value ? bundle.discount_value : '' }}" />
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <h4 style="line-height: 33px;">{{ text_total_product_price }}<span class="label label-default"><span class='total-products-price'>{{ bundle.price }}</span> {{ config_currency }}</span></h4>
+                <br />
+                <br />
+                <h4 style="line-height: 19px;">{{ text_price_with_discount }}<span class="label label-default"><span class='total-bundle-price'>{{ bundle.bundled_price }}</span> {{ config_currency }}</span></h4>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <br />
+                <div class="alert alert-warning" role="alert">{{ text_prices_no_taxes }}</div>
+            </div>
+        </div>
+    </div>
+    <hr><br />
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="step">{{ text_bundles_step_4 }}</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-3 col-lg-2">
+            <h5><strong>{{ text_bundle_sort_order }}:</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_bundle_sort_order_helper }}</span>
+        </div>    
+        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+            <input type="text" class="form-control" name="bundle[sort_order]" value="{{ bundle.sort_order ? bundle.sort_order : '0' }}" />
+        </div>
+    </div>
+    <br /><br />
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-3 col-lg-2">
+            <h5><strong>{{ text_date_available }}:</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_date_available_helper }}</span>
+        </div>    
+        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+            <input type="text" class="form-control date" data-date-format="YYYY-MM-DD" name="bundle[date_available]" value="{{ bundle.date_available ? bundle.date_available : date('Y-m-d') }}" />
+        </div>
+    </div>
+    <br /><br />
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-7 col-lg-7">
+
+        </div>
+        <div class="col-xs-12 col-sm-7 col-md-5 col-lg-5">
+            <div class="pull-right">
+                <a onClick="saveBundle(this);" class="btn btn-primary">{{ text_btn_save_bundle }}</a>&nbsp;&nbsp;<a onClick="cancelBundle(this);" class="btn btn-danger">{{ text_btn_cancel }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+

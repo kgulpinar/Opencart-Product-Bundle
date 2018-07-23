@@ -1,0 +1,138 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_listing_url }}</strong></h5>
+        	<span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_listing_url_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ store.url~"index.php?route=" ~ modulePath ~ "/listing" }}" target="_blank">{{ store.url~"index.php?route=" ~ modulePath ~ "/listing" }}</a>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_add_listing_to_main_menu }}</strong></h5>
+        	<span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_add_listing_to_main_menu_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select id="LinkChecker" name="{{ moduleName }}[MainLinkEnabled]" class="form-control">
+                <option value="yes" {{ moduleData.MainLinkEnabled and moduleData.MainLinkEnabled == 'yes' ? 'selected=selected' : '' }}>{{ text_enabled }}</option>
+                <option value="no" {{ (moduleData.MainLinkEnabled and moduleData.MainLinkEnabled == 'no') or moduleData.MainLinkEnabled is empty ? 'selected=selected' : '' }}>{{ text_disabled }}</option>
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div id="MainLinkOptions">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                <h5><strong>{{ text_menu_link_title }}</strong></h5>
+        	    <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_menu_link_title_helper }}</span>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                {% for language in languages %} 
+                    <div class="input-group">
+                        <span class="input-group-addon">{{ language.name }}:</span>
+                        <input type="text" class="form-control" name="{{ moduleName }}[LinkTitle][{{ language.language_id }}]" value="{% if moduleData.LinkTitle.language.language_id %}{{ moduleData.LinkTitle.language.language_id }}{% else %}{{ "Bundles" }}{% endif %}" /> 
+                    </div>
+                    <br />
+                {% endfor %} 
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                <h5><strong>{{ text_menu_link_sort_order }}</strong></h5>
+        	    <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_menu_link_sort_order_helper }}</span>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                <input type="number" class="form-control" name="{{ moduleName }}[LinkSortOrder]" value="{% if moduleData.LinkSortOrder or moduleData.LinkSortOrder == '0' %}{{ moduleData.LinkSortOrder }}{% else %}7{% endif %}" />
+            </div>
+        </div>
+        <hr />
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_bundles_per_page }}</strong></h5>
+        	<span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_bundles_per_page_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <input type="number" name="{{ moduleName }}[ListingLimit]" class="form-control" value="{{ moduleData.ListingLimit or moduleData.ListingLimit == '0' ? moduleData.ListingLimit : '10' }}" /> 
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_seo_options }}</strong></h5>
+        	<span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_seo_options_helper1 }}<br /><br /><i class="fa fa-info-circle"></i>&nbsp;{{ text_seo_options_helper2 }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <ul class="nav nav-tabs" id="langtabs" role="tablist">
+              {% for language in languages %} 
+                <li><a href="#lang-{{ language.language_id }}" role="tab" data-toggle="tab"><img src="{{ language.flag_url }}" title="{{ language.name }}"/></a></li>
+              {% endfor %} 
+            </ul>
+            <div class="tab-content">
+              {% for language in languages %} 
+                <div class="tab-pane" id="lang-{{ language.language_id }}">
+                    {{ text_page_title }}<br />
+                    <input name="{{ moduleName }}[PageTitle][{{ language.language_id }}]" class="form-control" type="text" value="{{ moduleData.PageTitle.language.language_id ? moduleData.PageTitle.language.language_id : 'Product Bundles' }}" />
+                    <br />
+                    {{ text_meta_description }}<br />
+                    <textarea name="{{ moduleName }}[MetaDescription][{{ language.language_id }}]" class="form-control" rows="4">{{ moduleData.MetaDescription.language.language_id ? moduleData.MetaDescription.language.language_id : 'Bundles with great discount! Only in example.com.' }}</textarea>
+                    <br />
+                    {{ text_meta_keywords }}<br />
+                    <input name="{{ moduleName }}[MetaKeywords][{{ language.language_id }}]" class="form-control" type="text" value="{{ moduleData.MetaKeywords.language.language_id ? moduleData.MetaKeywords.language.language_id : 'product bundles, discount, products, get discount' }}" />
+                    <br/>
+                    {{ text_seo_slug }}<br />
+                    <input name="{{ moduleName }}[SeoURL][{{ language.language_id }}]" class="form-control" type="text" value="{{ moduleData.SeoURL.language.language_id ? moduleData.SeoURL.language.language_id : 'bundles' }}" />
+                    <span class="help"><i class="fa fa-info-circle"></i>&nbsp; {{ text_seo_slug_helper|replace({ '%site%': store.url }) }}</span>
+                </div>
+              {% endfor %} 
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_bundle_description }}</strong></h5>
+        	<span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_bundle_description_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select id="LinkChecker" name="{{ moduleName }}[DescriptionListingEnabled]" class="form-control">
+                <option value="yes" {{ moduleData.DescriptionListingEnabled and moduleData.DescriptionListingEnabled == 'yes' ? 'selected=selected' : '' }}>{{ text_enabled }}</option>
+                <option value="no" {{ (moduleData.DescriptionListingEnabled and moduleData.DescriptionListingEnabled ==  'no') or moduleData.DescriptionListingEnabled is empty ? 'selected=selected' : '' }}>{{ text_disabled }}</option>
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_picture_width_height }}</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_in_pixels_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="input-group">
+              <span class="input-group-addon">{{ text_width }}&nbsp;</span>
+                <input type="text" name="{{ moduleName }}[ListingPictureWidth]" class="form-control" value="{{ moduleData.ListingPictureWidth ? moduleData.ListingPictureWidth : '120' }}" />
+              <span class="input-group-addon">{{ text_px }}</span>
+            </div>
+            <br />
+            <div class="input-group">
+              <span class="input-group-addon">{{ text_height }}</span>
+                <input type="text" name="{{ moduleName }}[ListingPictureHeight]" class="form-control" value="{{ moduleData.ListingPictureHeight ? moduleData.ListingPictureHeight : '120' }}" />
+              <span class="input-group-addon">{{ text_px }}</span>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_custom_css }}</strong></h5>
+       		<span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_custom_css_helper }}</span> 
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <textarea rows="10" name="{{ moduleName }}[ListingCustomCSS]" placeholder="CSS Style" class="form-control">{{ moduleData.ListingCustomCSS ? moduleData.ListingCustomCSS : '' }}</textarea>
+        </div>
+    </div>
+    <hr />
+</div>

@@ -1,0 +1,253 @@
+<span class="PB_heading_text">{{ text_option_heading }}</span>  
+{% if products %} 
+<form method="post" id="ProductBundlesOptionsForm">
+{% set i = 0 %}
+{% set max = products|length %}
+{% for product in products %} 
+    <div data-product-index="{{ i }}" class="{% if i+1 == max %}PB_options_product_item_last{% else %}PB_options_product_item{% endif %}">
+        {% if product.thumb %} 
+            <div class="PB_image"><a href="{{ product.href }}"><img class="PB_options_image" src="{{ product.thumb }}" alt="{{ product.name }}" /></a></div>
+        {% endif %} 
+        {% if product.price %} 
+            {% if not product.special %} 
+                {% set Pprice = product.price %}
+            {% else %}   
+                {% set Pprice = product.special  %}
+            {% endif %} 
+        {% endif %} 
+        <div class="PB_options_product_field">
+            <a href="{{ product.href }}">{{ product.name }}</a>
+            <strong>{{ Pprice }}</strong>
+        </div>
+        {% if product.options %} 
+            <div class="PB_options">
+                {% for option in product.options %} 
+                    {% if option.type == 'select' %} 
+                        <div data-option-id="bundle_option-{{ option.product_option_id }}" class="option">
+                            {% if option.required %} 
+                                <span class="required">*</span>
+                            {% endif %} 
+                            <b>{{ option.name }}:</b><br />
+                            <select name="option[{{ i }}][{{ option.product_option_id }}]" class="form-control">
+                                <option value="">{{ text_select }}</option>
+                                {% for option_value in option.option_value %} 
+                                    <option value="{{ option_value.product_option_value_id }}">{{ option_value.name }}
+                                    {% if option_value.price %} 
+                                        ({{ option_value.price_prefix }}{{ option_value.price }})
+                                    {% endif %} 
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endif %} 
+                    {% if option.type == 'radio' %} 
+                        <div data-option-id="bundle_option-{{ option.product_option_id }}" class="option">
+                            {% if option.required %} 
+                                <span class="required">*</span>
+                            {% endif %} 
+                            <b>{{ option.name }}:</b><br />
+                            {% for option_value in option.option_value %} 
+                                <div class="radio">
+                                  <label for="option-value-{{ option_value.product_option_value_id }}">
+                                    <input type="radio" name="option[{{ i }}][{{ option.product_option_id }}]" id="option-value-{{ option_value.product_option_value_id }}" value="{{ option_value.product_option_value_id }}">
+                                     {{ option_value.name }}
+                                     {% if option_value.price %} 
+                                        ({{ option_value.price_prefix }}{{ option_value.price }})
+                                     {% endif %} 
+                                  </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %} 
+                    {% if option.type == 'checkbox' %} 
+                        <div data-option-id="bundle_option-{{ option.product_option_id }}" class="option">
+                            {% if option.required %} 
+                                <span class="required">*</span>
+                            {% endif %} 
+                            <b>{{ option.name }}:</b><br />
+                            {% for option_value in option.option_value %} 
+                                <div class="checkbox">
+                                  <label for="option-value-{{ option_value.product_option_value_id }}">
+                                    <input type="checkbox" name="option[{{ i }}][{{ option.product_option_id }}][]" value="{{ option_value.product_option_value_id }}" id="option-value-{{ option_value.product_option_value_id }}" />
+                                    {{ option_value.name }}
+                                    {% if option_value.price %} 
+                                            ({{ option_value.price_prefix }}{{ option_value.price }})
+                                    {% endif %} 
+                                  </label>
+                                </div>
+                             {% endfor %}
+                        </div>
+                    {% endif %}  
+                    {% if option.type == 'image' %} 
+                        <div data-option-id="bundle_option-{{ option.product_option_id }}" class="option">
+                            {% if option.required %} 
+                                <span class="required">*</span>
+                            {% endif %} 
+                            <b>{{ option.name }}:</b><br />
+                            <table class="option-image">
+                            {% for option_value in option.option_value %} 
+                                <tr>
+                                    <td style="width: 1px;"><input type="radio" name="option[{{ i }}][{{ option.product_option_id }}]" value="{{ option_value.product_option_value_id }}" id="option-value-{{ option_value.product_option_value_id }}" /></td>
+                                    <td><label for="option-value-{{ option_value.product_option_value_id }}"><img src="{{ option_value.image }}" alt="{{ option_value.name ~ option_value.price ? ' ' ~ option_value.price_prefix ~ option_value.price : ''}}" /></label></td>
+                                    <td><label for="option-value-{{ option_value.product_option_value_id }}">{{ option_value.name }}
+                                    {% if option_value.price %} 
+                                        ({{ option_value.price_prefix }}{{ option_value.price }})
+                                    {% endif %} 
+                                    </label></td>
+                                </tr>
+                            {% endfor %}
+                            </table>
+                        </div>
+                    {% endif %}  
+                    {% if option.type == 'text' %} 
+                        <div data-option-id="bundle_option-{{ option.product_option_id }}" class="option">
+                            {% if option.required %} 
+                                <span class="required">*</span>
+                            {% endif %} 
+                            <b>{{ option.name }}:</b><br />
+                            <input type="text" class="form-control" name="option[{{ i }}][{{ option.product_option_id }}]" value="{{ option.option_value }}" />
+                        </div>
+                    {% endif %} 
+                    {% if option.type == 'textarea' %} 
+                        <div id="option-{{ option.product_option_id }}" class="option">
+                            {% if option.required %} 
+                                <span class="required">*</span>
+                            {% endif %} 
+                            <b>{{ option.name }}:</b><br />
+                            <textarea  class="form-control" name="option[{{ i }}][{{ option.product_option_id }}]" cols="16" rows="5">{{ option.option_value }}</textarea>
+                        </div>
+                    {% endif %} 
+                    {% if option.type == 'file' %} 
+                        <div data-option-id="bundle_option-{{ option.product_option_id }}" class="option">
+                            {% if option.required %} 
+                                <span class="required">*</span>
+                            {% endif %} 
+                            <b>{{ option.name }}:</b><br />
+
+                            <button type="button" id="button-upload{{ option.product_option_id }}" data-loading-text="Loading..." class="btn btn-default btn-block"><i class="fa fa-upload"></i> {{ button_upload }}</button>
+                            <input type="hidden" name="option[{{ i }}][{{ option.product_option_id }}]" value="" />
+                        </div>
+                    {% endif %} 
+                    {% if option.type == 'date' %} 
+                        <div data-option-id="bundle_option-{{ option.product_option_id }}" class="option">
+                            {% if option.required %} 
+                                <span class="required">*</span>
+                            {% endif %} 
+                            <b>{{ option.name }}:</b><br />
+                            <input type="text" data-date-format="YYYY-MM-DD" name="option[{{ i }}][{{ option.product_option_id }}]" value="{{ option.option_value }}" class="PB_date form-control" />
+                        </div>
+                    {% endif %} 
+                    {% if option.type == 'datetime' %} 
+                        <div data-option-id="bundle_option-{{ option.product_option_id }}" class="option">
+                            {% if option.required %} 
+                                <span class="required">*</span>
+                            {% endif %} 
+                            <b>{{ option.name }}:</b><br />
+                            <input type="text" name="option[{{ i }}][{{ option.product_option_id }}]" value="{{ option.option_value }}" class="PB_datetime form-control" />
+                        </div>
+                    {% endif %} 
+                    {% if option.type == 'time' %} 
+                        <div data-option-id="bundle_option-{{ option.product_option_id }}" class="option">
+                            {% if option.required %} 
+                                <span class="required">*</span>
+                            {% endif %} 
+                            <b>{{ option.name }}:</b><br />
+                            <input type="text" name="option[{{ i }}][{{ option.product_option_id }}]" value="{{ option.option_value }}" class="PB_time form-control" />
+                        </div>
+                    {% endif %} 
+                {% endfor %}
+            </div> <!-- <div class="options"> -->
+            {% endif %}
+        </div>
+        {% set i = i + 1 %}  
+    {% endfor %}
+<input type="hidden" name="products" value="{{ bundle_products }}" />
+<div style="clear:both"></div>
+</form>
+<br />
+<div class="PB_colorbox_footer">
+    <div class="PB_continue">
+        <a id="ProductBundlesOptionsSubmitButton" class="btn btn-primary">{{ Continue }}</a>
+    </div>
+</div>
+    
+<script type="text/javascript">
+$('#ProductBundlesOptionsSubmitButton').on('click', function(e){
+     $.ajax({
+        url: 'index.php?route={{ modulePath }}/add_bundle_to_cart_options',
+        type: 'post',
+        data: $('#ProductBundlesOptionsForm').serialize(),
+        dataType: 'json',
+        success: function(json) {
+            $('.error').remove();
+            if (json['error']) {
+                if (json['error']['option']) {
+                    for (i in json['error']['option']) {
+                        for (n in json['error']['option'][i]) {
+                            $('div[data-product-index="' + json['error']['option'][i][n].key + '"]').find('div[data-option-id=bundle_option-' + i + ']').after('<span class="error">' + json['error']['option'][i][n].message + '</span>');
+                        }
+                    }
+                }
+            }
+            if (json['success']) {
+                parent.location = "{{ cart_url|escape }}";	
+            }
+        }
+    });
+});
+
+$('.PB_date').datetimepicker({
+    pickTime: false
+});
+
+$('.PB_datetime').datetimepicker({
+    pickDate: true,
+    pickTime: true
+});
+
+$('.PB_time').datetimepicker({
+    pickDate: false
+});
+
+$('button[id^=\'button-upload\']').on('click', function() {
+    var node = this;
+    $('#form-upload').remove();
+    $('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
+    $('#form-upload input[name=\'file\']').trigger('click');
+    $('#form-upload input[name=\'file\']').on('change', function() {
+        $.ajax({
+            url: 'index.php?route=tool/upload',
+            type: 'post',
+            dataType: 'json',
+            data: new FormData($(this).parent()[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                $(node).button('loading');
+            },
+            complete: function() {
+                $(node).button('reset');
+            },
+            success: function(json) {
+                $('.text-danger').remove();
+
+                if (json['error']) {
+                    $(node).parent().find('input').after('<div class="text-danger">' + json['error'] + '</div>');
+                }
+
+                if (json['success']) {
+                    alert(json['success']);
+
+                    $(node).parent().find('input').attr('value', json['code']);
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+{% endif %}
+

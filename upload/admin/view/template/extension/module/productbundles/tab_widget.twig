@@ -1,0 +1,123 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_widget_title }}</strong></h5>
+        	<span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_widget_title_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            {% for language in languages %} 
+                <div class="input-group">
+                  <span class="input-group-addon"><img src="{{ language.flag_url }}" style="margin-top:-3px;" title="{{ language.name }}" /> {{ language.name }}</span>
+                  <input name="{{ moduleName }}[WidgetTitle][{{ language.language_id }}]" class="form-control" type="text" value="{{ moduleData.WidgetTitle[language.language_id] ? moduleData.WidgetTitle[language.language_id] : text_check_this_bundle }}" />
+                </div>
+                <br />
+            {% endfor %} 
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_wrap_in_widget }}</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_wrap_in_widget_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select name="{{ moduleName }}[WrapInWidget]" class="form-control">
+                <option value="yes" {{ moduleData.WrapInWidget and moduleData.WrapInWidget == 'yes' ? 'selected=selected' : '' }}>{{ text_enabled }}</option>
+                <option value="no" {{ (moduleData.WrapInWidget and moduleData.WrapInWidget == 'no') or moduleData.WrapInWidget is empty ? 'selected=selected' : '' }}>{{ text_disabled }}</option>
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_bundles_in_widget }}</strong></h5>
+        	<span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_bundles_in_widget_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <input type="number" name="{{ moduleName }}[WidgetLimit]" class="form-control" value="{{ moduleData.WidgetLimit or moduleData.WidgetLimit == '0' ? moduleData.WidgetLimit : '2' }}" /> 
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_display_type }}</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_display_type_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select name="{{ moduleName }}[DisplayType]" class="form-control">
+                <option value="default" {{ moduleData.DisplayType and moduleData.DisplayType == 'default' ? 'selected=selected' : '' }}>{{ text_default }}</option>
+                <option value="random" {{ moduleData.DisplayType and moduleData.DisplayType == 'random' ? 'selected=selected' : '' }}>{{ text_random }}</option>
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_show_random_bundles }}</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_show_random_bundles_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select name="{{ moduleName }}[ShowRandomBundles]" class="form-control">
+                <option value="yes" {{ moduleData.ShowRandomBundles and moduleData.ShowRandomBundles == 'yes' ? 'selected=selected' : '' }}>{{ text_enabled }}</option>
+               <option value="no" {{ (moduleData.ShowRandomBundles and moduleData.ShowRandomBundles == 'no') or moduleData.ShowRandomBundles is empty ? 'selected=selected' : '' }}>{{ text_disabled }}</option>
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_bundle_description }}</strong></h5>
+        	<span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_bundle_description_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select name="{{ moduleName }}[DescriptionWidgetEnabled]" class="form-control">
+                <option value="yes" {{ moduleData.DescriptionWidgetEnabled and moduleData.DescriptionWidgetEnabled == 'yes' ? 'selected=selected' : '' }}>{{ text_enabled }}</option>
+                <option value="no"  {{ (moduleData.DescriptionWidgetEnabled and moduleData.DescriptionWidgetEnabled == 'no') or moduleData.DescriptionWidgetEnabled is empty ? 'selected=selected' : '' }}>{{ text_disabled }}</option>
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_show_all_bundles_button }}</strong></h5>
+        	<span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_show_all_bundles_button_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select name="{{ moduleName }}[ShowAllBundlesButton]" class="form-control">
+                <option value="yes" {{ moduleData.ShowAllBundlesButton and moduleData.ShowAllBundlesButton == 'yes' ? 'selected=selected' : '' }}>{{ text_enabled }}</option>
+                <option value="no"  {{ (moduleData.ShowAllBundlesButton and moduleData.ShowAllBundlesButton == 'no') or moduleData.ShowAllBundlesButton is empty ? 'selected=selected' : '' }}>{{ text_disabled }}</option>
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_picture_width_height }}</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_in_pixels_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="input-group">
+              <span class="input-group-addon">{{ text_width }}&nbsp;</span>
+                <input type="text" name="{{ moduleName }}[WidgetWidth]" class="form-control" value="{{ moduleData.WidgetWidth ? moduleData.WidgetWidth : '80' }}" />
+              <span class="input-group-addon">{{ text_px }}</span>
+            </div>
+            <br />
+            <div class="input-group">
+              <span class="input-group-addon">{{ text_height }}</span>
+                <input type="text" name="{{ moduleName }}[WidgetHeight]" class="form-control" value="{{ moduleData.WidgetHeight ? moduleData.WidgetHeight : '80' }}" />
+              <span class="input-group-addon">{{ text_px }}</span>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_custom_css }}</strong></h5>
+       		<span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_custom_css_helper }}</span> 
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <textarea rows="10" name="{{ moduleName }}[CustomCSS]" placeholder="CSS Style" class="form-control">{{ moduleData.CustomCSS ? moduleData.CustomCSS : '' }}</textarea>
+        </div>
+    </div>
+    <hr />
+</div>

@@ -1,0 +1,41 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><span class="required">*</span> <strong>{{ text_module_status }}</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_module_status_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select id="Checker" name="{{ moduleName }}[Enabled]" class="form-control">
+                  <option value="yes" {{ moduleData.Enabled  and  moduleData.Enabled  == 'yes' ? 'selected=selected' : '' }}>{{ text_enabled }}</option>
+                  <option value="no"  {{ (moduleData.Enabled and moduleData.Enabled == 'no') or moduleData.Enabled is empty ? 'selected=selected' : '' }}>{{ text_disabled }}</option>
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_multiple_bundles }}</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_multiple_bundles_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select name="{{ moduleName }}[MultipleBundles]" class="form-control">
+                  <option value="no" {{ (moduleData.MultipleBundles and moduleData.MultipleBundles == 'no') or moduleData.MultipleBundles is empty ? 'selected=selected' : '' }}>{{ text_add_the_discount_once }}</option>
+                  <option value="yes" {{ moduleData.MultipleBundles and moduleData.MultipleBundles == 'yes' ? 'selected=selected' : '' }}>{{ text_add_discount_every_time }}</option>
+            </select>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <h5><strong>{{ text_regard_taxes_on_discount }}</strong></h5>
+            <span class="help"><i class="fa fa-info-circle"></i>&nbsp;{{ text_regard_taxes_helper }}</span>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <select name="{{ moduleName }}[DiscountTaxation]" class="form-control">
+                  <option value="no"  {{ (moduleData.DiscountTaxation and moduleData.DiscountTaxation == 'no') or moduleData.DiscountTaxation is empty ? 'selected=selected' : '' }}>{{ text_disabled }}</option>
+                  <option value="yes" {{ moduleData.DiscountTaxation and moduleData.DiscountTaxation == 'yes' ? 'selected=selected' : '' }}>{{ text_enabled }}</option>
+            </select>
+        </div>
+    </div>
+    <hr />
+</div>

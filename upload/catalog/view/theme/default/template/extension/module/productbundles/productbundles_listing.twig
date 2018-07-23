@@ -1,0 +1,124 @@
+{{ header }}
+{% if moduleData.ListingCustomCSS %} 
+    <style>
+        {{ moduleData.ListingCustomCSS|escape }}
+    </style>
+{% endif %} 
+<div class="container">
+    <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %} 
+        	<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %} 
+    </ul>
+	<h2 class="heading-title">{{ heading_title }}</h2>
+	<div class="row">{{ column_left }}
+        {% if column_left and column_right %} 
+            {% set class = 'col-sm-6' %}
+        {% elseif column_left or column_right %} 
+            {% set class = 'col-sm-9' %}
+        {% else %}   
+            {% set class = 'col-sm-12' %} 
+        {% endif %}  
+    	<div id="content" class="{{ class }}">{{ content_top }}
+        	<div class="pbListing-content">
+
+                {% for bundle in bundles %} 
+                	<div class="pbListing-box box-productbundles">
+                    	<div class="box-content">
+                            {% if bundle.name %} 
+                                <div class="bundle-list-name">
+                                	<a href="{{ bundle.url }}">{{ bundle.name }}</a>
+                                </div>
+                            {% endif %}
+                             
+                            {% if moduleData.DescriptionListingEnabled and moduleData.DescriptionListingEnabled == 'yes' %} 
+                            <div class="bundle-list-description">
+                                {{ bundle.description }}
+                            </div>
+                            {% endif %} 
+                            
+                        	<div class="box-products">
+                            	{% for product in bundle.products %} 
+                                   
+                                	{% if not loop.first %}  
+                                    	<div class="PB_plusbutton">+</div>
+                                	{% endif %} 
+                                	
+                                	<div class="PB_product">
+                                    	{% if product.quantity > '1' %} 
+                                        	<span class="pb_quantity">{{ product.quantity }}x</span>
+                                        {% endif %} 
+                                    	{% if product.thumb %} 
+                                        	<div class="PB_image">
+                                            	<a href="{{ product.href }}"><img class="PB_options_image" src="{{ product.thumb }}" alt="{{ product.name }}" /></a>
+                                            </div>
+                                    	{% endif %} 
+                                    	<div class="pb_name">
+                                        	<a class="PB_product_name" href="{{ product.href }}">{{ product.name }}</a>
+                                            <div class="pb_price">
+                                                {% if product.price %} 
+                                                    {% if not product.special %} 
+                                                        {% set Pprice = product.price %}
+                                                    {% else %}   
+                                                        {% set Pprice = product.special %}
+                                                    {% endif %} 
+                                                {% endif %}  
+                                                <strong>{{ product.price }}</strong>
+                                       		</div>
+                                        </div>
+                                	</div>
+                            	{% endfor %}
+                               
+                                <div class="PB_bundle_info">
+                                    <strong><span class="PB_bundle_total_price">{{ ProductBundles_BundlePrice }} {{ bundle.final_price }}</span></strong>
+                                    <br />
+                                    <strong><span>{{ ProductBundles_YouSave }} {{ bundle.discount_value }}!</span></strong>
+                                    <br /><br />
+                                    <center><a onClick="addBundleToCart({{ bundle.id }}, {{ bundle.product_options }});" id="ProductBundlesSubmitButton" class="btn btn-primary btn-lg btn-block">{{ ProductBundles_AddBundleToCart }}</a></center>
+                                </div>
+                                
+                        	</div>
+                		</div>
+            		</div> 
+            	 {% endfor %}
+        	        	
+        	</div>
+    	</div>
+        <div class="row pbListing-pagination">
+            <div class="col-sm-6 text-left">{{ pagination }}</div>
+            <div class="col-sm-6 text-right">{{ results }}</div>
+        </div>
+  		{{ content_bottom }}
+	</div>
+  	{{ column_right }}
+</div>
+<script type="text/javascript">
+function addBundleToCart(bundle_id, options) {
+    if (options) {
+        $.fancybox.open({
+            href : 'index.php?route={{ modulePath }}/show_bundle_options&bundle_id=' + bundle_id,
+            type : 'ajax',
+            padding : 20,
+            openEffect : 'elastic',
+            openSpeed : 150,
+            fitToView : true,
+            closeBtn : true
+        });
+    } else {
+        $.ajax({
+            url: 'index.php?route={{ modulePath }}/add_bundle_to_cart&bundle_id=' + bundle_id,
+            type: 'post',
+            dataType: 'json',
+            success: function(json) {
+                if (json['error']) {
+                    alert("There is a problem with the form. Please try again later.");
+                }
+                if (json['success']) {
+                    window.location = "{{ cart_url|escape }}";	
+                }
+            }
+        });
+    }
+}    
+</script>
+{{ footer }}
